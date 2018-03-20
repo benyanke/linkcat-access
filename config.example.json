@@ -1,0 +1,14 @@
+{
+  "cards": [
+    {
+      "no": "1234567890",
+      "pin": "1234",
+      "nickname": "Card one"
+    },
+    {
+      "no": "0987654321",
+      "pin": "4321",
+      "nickname": "Card two"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+http --form --verify=no --follow POST 
+
+https://www.linkcat.info/cgi-bin/koha/opac-user.pl 
+
+userid=29078021004687 
+password=0102 
+koha_login_context=opac 
+submit="Log In"
+
+
+
+http --form --verify=no --follow POST https://www.linkcat.info/cgi-bin/koha/opac-user.pl userid=29078021004687 password=0102 koha_login_context=opac submit="Log In" 2> /dev/null
