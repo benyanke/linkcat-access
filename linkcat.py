@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 # Handles interaction with linkcat (South Central Wisconsin Library System online tool)
 class linkcat:
 
-  cookie = None
+  logged_in = False
   username = None
   password = None
 
@@ -39,7 +39,7 @@ class linkcat:
   def try_login(self):
 
     # Attempt login
-    self.session.post(self.ROOT_URL + self.LOGIN_URL, verify=False, data={'userid': self.username, 'password': self.password, 'koha_login_context': 'opac', 'Submit':'Log In'})
+    r = self.session.post(self.ROOT_URL + self.LOGIN_URL, verify=False, data={'userid': self.username, 'password': self.password, 'koha_login_context': 'opac', 'Submit':'Log In'})
 
     # Get login cookie
     cookies = self.session.cookies.get_dict();
@@ -47,6 +47,7 @@ class linkcat:
       self.cookie = cookies['CGISESSID']
       if self.debug:
         print("Login suceess")
+      self.logged_in = True
       return True
 
     else:
@@ -61,6 +62,10 @@ class linkcat:
 
   # returns checked out books
   def get_checked_out_books(self):
+     if not self.logged_in:
+       print("Not logged in!")
+       return False
+
      page = self.session.get(self.ROOT_URL + self.CHECKED_OUT_URL, verify=False)
      soup = BeautifulSoup(page.content, 'lxml')
 
