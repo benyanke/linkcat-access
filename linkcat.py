@@ -64,11 +64,9 @@ class linkcat:
      page = self.session.get(self.ROOT_URL + self.CHECKED_OUT_URL, verify=False)
      soup = BeautifulSoup(page.content, 'lxml')
 
-
      table = soup.find('table', attrs={'id':'checkoutst'})
      table_head = table.find('thead')
      table_body = table.find('tbody')
-
 
      books = []
 
@@ -88,10 +86,13 @@ class linkcat:
        row_data['due'] = row.find_all('td')[3].get_text().lstrip().rstrip()
 
 
-       # This renewal count data is not fully tested, due to lack of data
+       # This renewal count data is not fully tested, due to lack of data, but it seems to work
        raw_renewal_data = row.find_all('td')[4].span.get_text().lstrip().rstrip()
-       row_data['renewals_used'] = raw_renewal_data.split(" of ")[0][1:]
-       row_data['renewals_left'] = raw_renewal_data.split(" of ")[1].split(" renewals remaining")[0]
+       row_data['renewals_total'] = int(raw_renewal_data.split(" of ")[1].split(" renewals remaining")[0].lstrip().rstrip())
+       row_data['renewals_available'] = int(raw_renewal_data.split(" of ")[0][1:].lstrip().rstrip())
+       row_data['renewals_used'] = row_data['renewals_total'] - row_data['renewals_available'];
+
+       del row_data['renewals_total'];
 
        books.append(row_data)
 
@@ -99,6 +100,7 @@ class linkcat:
 
 
 # Run commands
-lc = linkcat("LIB-CARD-NO", "PASSWORd")
+lc = linkcat("LIB-CARD-NO", "PASSWORD")
+
 co_books = lc.get_checked_out_books()
 print(co_books)
